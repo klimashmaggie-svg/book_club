@@ -1,1 +1,0 @@
-"""BookClub application package."""
