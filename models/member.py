@@ -8,6 +8,7 @@ class Member:
         email: str,
         role: str = "reader",
     ) -> None:
+        # Атрибуты объекта описывают конкретного участника клуба.
         self.id = member_id
         self.name = name
         self.email = email
@@ -16,10 +17,12 @@ class Member:
     @property
     def is_moderator(self) -> bool:
         """Return True if the member can moderate discussions."""
+        # Свойство позволяет обращаться как к обычному полю: member.is_moderator.
         return self.role in ("moderator", "owner")
 
     def to_data(self) -> dict:
         """Convert the object to JSON-compatible data."""
+        # В JSON сохраняются простые значения, а не сам объект Member.
         return {
             "id": self.id,
             "name": self.name,
@@ -30,6 +33,7 @@ class Member:
     @classmethod
     def from_data(cls, data: dict) -> "Member":
         """Create a Member object from JSON-compatible data."""
+        # Если роль не указана в JSON, участник считается обычным читателем.
         return cls(
             member_id=data["id"],
             name=data["name"],
@@ -48,6 +52,7 @@ def add_member(
     role: str = "reader",
 ) -> Member:
     """Create a member and add it to the collection."""
+    # Новый id выбирается на основе уже существующих участников.
     next_id = max((member.id for member in members), default=0) + 1
     member = Member(next_id, name, email, role)
     members.append(member)

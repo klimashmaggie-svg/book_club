@@ -8,6 +8,7 @@ class Book:
         author: str,
         year: int,
     ) -> None:
+        # Атрибуты объекта описывают конкретную книгу.
         self.id = book_id
         self.title = title
         self.author = author
@@ -23,6 +24,7 @@ class Book:
 
     def to_data(self) -> dict:
         """Convert the object to JSON-compatible data."""
+        # В JSON нельзя напрямую записать объект, поэтому возвращаем словарь.
         return {
             "id": self.id,
             "title": self.title,
@@ -33,6 +35,7 @@ class Book:
     @classmethod
     def from_data(cls, data: dict) -> "Book":
         """Create a Book object from JSON-compatible data."""
+        # Метод используется при загрузке книги из JSON-файла.
         return cls(
             book_id=data["id"],
             title=data["title"],
@@ -51,6 +54,7 @@ def add_book(
     year: int,
 ) -> Book:
     """Create a book and add it to the collection."""
+    # Новый id выбирается на основе уже существующих книг.
     next_id = max((book.id for book in books), default=0) + 1
     book = Book(next_id, title, author, year)
     books.append(book)

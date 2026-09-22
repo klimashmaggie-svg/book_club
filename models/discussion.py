@@ -14,6 +14,7 @@ class Discussion:
         topic: str,
         messages: list[str] | None = None,
     ) -> None:
+        # Обсуждение связывает клуб, книгу, автора и список сообщений.
         self.id = discussion_id
         self.club_id = club_id
         self.book = book
@@ -23,10 +24,12 @@ class Discussion:
 
     def add_message(self, member: Member, text: str) -> None:
         """Add a message to the discussion."""
+        # Сообщение хранится вместе с именем автора для удобного вывода.
         self.messages.append(f"{member.name}: {text}")
 
     def to_data(self) -> dict:
         """Convert the object to JSON-compatible data."""
+        # В JSON сохраняются id связанных объектов, а не сами объекты.
         return {
             "id": self.id,
             "club_id": self.club_id,
@@ -44,6 +47,7 @@ class Discussion:
         members: list[Member],
     ) -> "Discussion":
         """Create a Discussion object using linked Book and Member objects."""
+        # При загрузке нужно найти реальные объекты книги и автора по их id.
         book = _find_required_book(books, data["book_id"])
         author = _find_required_member(members, data["author_id"])
         return cls(
@@ -75,6 +79,7 @@ def find_discussions_by_book(
 
 
 def _find_required_book(books: list[Book], book_id: int) -> Book:
+    # Вспомогательная проверка нужна, чтобы не создать обсуждение без книги.
     for book in books:
         if book.id == book_id:
             return book
@@ -82,6 +87,7 @@ def _find_required_book(books: list[Book], book_id: int) -> Book:
 
 
 def _find_required_member(members: list[Member], member_id: int) -> Member:
+    # Вспомогательная проверка нужна, чтобы не создать обсуждение без автора.
     for member in members:
         if member.id == member_id:
             return member

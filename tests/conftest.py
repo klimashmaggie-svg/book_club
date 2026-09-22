@@ -1,3 +1,5 @@
+"""Добавляет корень проекта в путь импорта для запуска pytest."""
+
 import sys
 from pathlib import Path
 

@@ -14,21 +14,32 @@ class Club:
         members: list[Member] | None = None,
         books: list[Book] | None = None,
         discussions: list[Discussion] | None = None,
+        subclubs: list["Club"] | None = None,
     ) -> None:
+        # Клуб хранит не id, а реальные объекты участников, книг и обсуждений.
         self.id = club_id
         self.name = name
         self.description = description
         self.members = members or []
         self.books = books or []
         self.discussions = discussions or []
+        self.subclubs = subclubs or []
+
+    def add_subclub(self, club: "Club") -> None:
+        """Add another club inside this club."""
+        if club is self or club in self.subclubs:
+            raise ValueError("A club cannot contain itself or duplicate a subclub")
+        self.subclubs.append(club)
 
     def add_member(self, member: Member) -> None:
         """Add a member to the club if they are not already included."""
+        # Проверка защищает от повторного добавления одного объекта.
         if member not in self.members:
             self.members.append(member)
 
     def add_book(self, book: Book) -> None:
         """Add a book to the club reading list."""
+        # Одна и та же книга не должна дублироваться в списке клуба.
         if book not in self.books:
             self.books.append(book)
 
@@ -40,11 +51,14 @@ class Club:
         topic: str,
     ) -> Discussion:
         """Create a discussion linked with this club, a book and a member."""
+        # Обсуждение можно создать только для книги, добавленной в клуб.
         if book not in self.books:
             raise ValueError("The book must be added to the club first")
+        # Автор обсуждения должен быть участником этого клуба.
         if author not in self.members:
             raise ValueError("The discussion author must be a club member")
 
+        # Discussion получает ссылки на объекты Book и Member.
         discussion = Discussion(
             discussion_id=discussion_id,
             club_id=self.id,
@@ -57,6 +71,7 @@ class Club:
 
     def to_data(self) -> dict:
         """Convert the object to JSON-compatible data."""
+        # Для связей сохраняются id объектов, чтобы JSON оставался простым.
         return {
             "id": self.id,
             "name": self.name,
@@ -66,6 +81,7 @@ class Club:
             "discussion_ids": [
                 discussion.id for discussion in self.discussions
             ],
+            "subclub_ids": [club.id for club in self.subclubs],
         }
 
     @classmethod
@@ -77,6 +93,8 @@ class Club:
         discussions: list[Discussion],
     ) -> "Club":
         """Create a Club object using linked objects."""
+        # По id из JSON выбираем уже созданные объекты участников, книг
+        # и обсуждений. Так восстанавливаются связи между объектами.
         return cls(
             club_id=data["id"],
             name=data["name"],
@@ -110,6 +128,7 @@ def add_club(
     description: str,
 ) -> Club:
     """Create a club and add it to the collection."""
+    # Новый id выбирается на основе уже существующих клубов.
     next_id = max((club.id for club in clubs), default=0) + 1
     club = Club(next_id, name, description)
     clubs.append(club)
