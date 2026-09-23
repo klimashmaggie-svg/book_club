@@ -34,4 +34,6 @@ def test_save_and_load_objects(tmp_path: Path, monkeypatch) -> None:
     assert books[0].title == "Преступление и наказание"
     assert discussions[0].book is books[0]
     assert discussions[0].author is members[0]
+    assert clubs[0].members[0] is members[0]
+    assert discussions[0].is_about(books[0])
     assert clubs[0].subclubs == [clubs[1]]

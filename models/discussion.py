@@ -27,6 +27,10 @@ class Discussion:
         # Сообщение хранится вместе с именем автора для удобного вывода.
         self.messages.append(f"{member.name}: {text}")
 
+    def is_about(self, book: Book) -> bool:
+        """Return True if the discussion is linked to the selected book."""
+        return self.book.id == book.id
+
     def to_data(self) -> dict:
         """Convert the object to JSON-compatible data."""
         # В JSON сохраняются id связанных объектов, а не сами объекты.

@@ -17,8 +17,14 @@ def main() -> None:
         if club.id in nested_ids:
             continue
         print(f"- {club}")
+        print("  Участники клуба:")
+        for member in club.members:
+            print(f"    - {member.name}")
         for subclub in club.subclubs:
             print(f"  - Внутри клуба: {subclub}")
+            print("    Участники клуба:")
+            for member in subclub.members:
+                print(f"      - {member.name}")
 
     print()
     print("Участники:")
@@ -34,6 +40,7 @@ def main() -> None:
     print("Обсуждения:")
     for discussion in discussions:
         print(f"- {discussion}")
+        print(f"  Связанная книга: {discussion.book.title}")
         # Сообщения хранятся внутри объекта обсуждения.
         for message in discussion.messages:
             print(f"  {message}")

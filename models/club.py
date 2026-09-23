@@ -33,14 +33,18 @@ class Club:
 
     def add_member(self, member: Member) -> None:
         """Add a member to the club if they are not already included."""
-        # Проверка защищает от повторного добавления одного объекта.
-        if member not in self.members:
+        # Сравниваем id, чтобы не добавить копию того же участника.
+        if not self.has_member(member):
             self.members.append(member)
+
+    def has_member(self, member: Member) -> bool:
+        """Return True if the member belongs to the club."""
+        return any(item.id == member.id for item in self.members)
 
     def add_book(self, book: Book) -> None:
         """Add a book to the club reading list."""
         # Одна и та же книга не должна дублироваться в списке клуба.
-        if book not in self.books:
+        if not any(item.id == book.id for item in self.books):
             self.books.append(book)
 
     def create_discussion(
@@ -52,10 +56,10 @@ class Club:
     ) -> Discussion:
         """Create a discussion linked with this club, a book and a member."""
         # Обсуждение можно создать только для книги, добавленной в клуб.
-        if book not in self.books:
+        if not any(item.id == book.id for item in self.books):
             raise ValueError("The book must be added to the club first")
         # Автор обсуждения должен быть участником этого клуба.
-        if author not in self.members:
+        if not self.has_member(author):
             raise ValueError("The discussion author must be a club member")
 
         # Discussion получает ссылки на объекты Book и Member.

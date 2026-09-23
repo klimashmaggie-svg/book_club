@@ -60,6 +60,29 @@ def test_club_does_not_duplicate_member() -> None:
     assert club.members == [member]
 
 
+def test_club_recognizes_member_by_id() -> None:
+    """Клуб связывает участника по id и не добавляет его копию."""
+    member = Member(1, "Лидия Андреева", "lidia@example.com")
+    member_copy = Member(1, "Лидия Андреева", "lidia@example.com")
+    club = Club(1, "Клуб классики", "Читаем классику", [member])
+
+    club.add_member(member_copy)
+
+    assert club.has_member(member_copy)
+    assert club.members == [member]
+
+
+def test_discussion_is_linked_to_book() -> None:
+    """Обсуждение хранит объект выбранной книги и узнает ее по id."""
+    member = Member(1, "Ирина Лебедева", "irina@example.com")
+    book = Book(1, "Отцы и дети", "Иван Тургенев", 1862)
+    same_book = Book(1, "Отцы и дети", "Иван Тургенев", 1862)
+    discussion = Discussion(1, 1, book, member, "Конфликт поколений")
+
+    assert discussion.book is book
+    assert discussion.is_about(same_book)
+
+
 def test_club_contains_two_subclubs() -> None:
     """Основной клуб может хранить два других клуба как объекты."""
     club = Club(1, "Клуб классики", "Читаем классику")
