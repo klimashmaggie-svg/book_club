@@ -31,18 +31,36 @@
     "id": 2,
     "name": "Клуб русской классики",
     "description": "Обсуждаем произведения Пушкина и Толстого.",
-    "member_ids": [1, 3, 5],
-    "book_ids": [3, 4, 5],
-    "discussion_ids": [2],
+    "member_ids": [
+      1,
+      3,
+      5
+    ],
+    "book_ids": [
+      3,
+      4,
+      5
+    ],
+    "discussion_ids": [
+      2
+    ],
     "subclub_ids": []
   },
   {
     "id": 3,
     "name": "Клуб фантастики",
     "description": "Читаем антиутопии и фантастику.",
-    "member_ids": [2, 4],
-    "book_ids": [6, 7],
-    "discussion_ids": [3],
+    "member_ids": [
+      2,
+      4
+    ],
+    "book_ids": [
+      6,
+      7
+    ],
+    "discussion_ids": [
+      3
+    ],
     "subclub_ids": []
   }
 ]
