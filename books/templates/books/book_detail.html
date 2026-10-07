@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ book.title }} — BookClub{% endblock %}
+
+{% block content %}
+<div class="container content-shell">
+<nav aria-label="Хлебные крошки" class="crumbs">
+  <a href="{% url 'books:book_list' %}">Книги</a><span>/</span><span>{{ book.title }}</span>
+</nav>
+<section class="detail-panel mb-5">
+  <p class="eyebrow">Книга</p>
+  <h1>{{ book.title }}</h1>
+  <dl class="row mb-0 mt-4">
+    <dt class="col-sm-3">Автор</dt><dd class="col-sm-9">{{ book.author }}</dd>
+    <dt class="col-sm-3">Год издания</dt><dd class="col-sm-9">{{ book.year }}</dd>
+  </dl>
+</section>
+<section>
+  <p class="eyebrow">Отзывы</p><h2 class="section-title">Мнения участников</h2>
+  <div class="review-list mt-3">
+    {% for discussion in discussions %}
+      <a class="review-row" href="{% url 'clubs:discussion_detail' discussion.id %}">
+        <span class="review-name">{{ discussion.member.name }}</span>
+        <span class="review-copy">{{ discussion.review }}</span>
+      </a>
+    {% empty %}
+      <div class="list-group-item">Для этой книги отзывов пока нет.</div>
+    {% endfor %}
+  </div>
+</section>
+</div>
+{% endblock %}

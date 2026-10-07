@@ -68,3 +68,8 @@ def find_members(members: list[Member], query: str) -> list[Member]:
         if normalized_query in member.name.lower()
         or normalized_query in member.email.lower()
     ]
+
+
+def find_member_by_id(members: list[Member], member_id: int) -> Member | None:
+    """Find one member by id."""
+    return next((member for member in members if member.id == member_id), None)

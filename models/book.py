@@ -64,3 +64,8 @@ def add_book(
 def find_books(books: list[Book], query: str) -> list[Book]:
     """Find books by title or author."""
     return [book for book in books if book.matches_query(query)]
+
+
+def find_book_by_id(books: list[Book], book_id: int) -> Book | None:
+    """Find one book by id."""
+    return next((book for book in books if book.id == book_id), None)

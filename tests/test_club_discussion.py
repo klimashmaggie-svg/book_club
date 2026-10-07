@@ -1,123 +1,62 @@
-"""Проверки связей клуба с участниками, книгами и обсуждениями."""
-
-import pytest
+"""Проверки новой логики клубов и обсуждений."""
 
 from models import Book, Club, Discussion, Member, add_club
 
 
-def test_club_creation_and_string_representation() -> None:
-    """Клуб хранит объекты участников и книг и показывает их число."""
-    member = Member(1, "Наталья Федорова", "natalia@example.com", "owner")
-    book = Book(1, "Преступление и наказание", "Федор Достоевский", 1866)
-    club = Club(1, "Клуб классики", "Читаем классику", [member], [book])
+def test_discussion_combines_member_book_and_review() -> None:
+    """Обсуждение связывает участника, книгу и текст отзыва."""
+    member = Member(1, "Вера Соколова", "vera@example.com")
+    book = Book(1, "Отцы и дети", "Иван Тургенев", 1862)
 
-    assert club.id == 1
-    assert club.members == [member]
-    assert club.books == [book]
-    assert "Клуб классики" in str(club)
+    discussion = Discussion(1, member, book, "Интересный конфликт поколений.")
+
+    assert discussion.member is member
+    assert discussion.book is book
+    assert discussion.review == "Интересный конфликт поколений."
+    assert discussion.is_about(book)
 
 
-def test_club_creates_discussion_with_linked_objects() -> None:
-    """Обсуждение ссылается на книгу и автора из клуба."""
-    member = Member(1, "Артем Козлов", "artem@example.com", "owner")
-    book = Book(1, "Преступление и наказание", "Федор Достоевский", 1866)
+def test_club_stores_discussions() -> None:
+    """Клуб является коллекцией связанных обсуждений."""
+    member = Member(1, "Ирина Лебедева", "irina@example.com")
+    book = Book(1, "Мы", "Евгений Замятин", 1924)
+    discussion = Discussion(1, member, book, "Роман о свободе.")
+    club = Club(1, "Клуб фантастики", "Читаем фантастику")
+
+    club.add_discussion(discussion)
+
+    assert club.discussions == [discussion]
+    assert club.to_data()["discussion_ids"] == [1]
+
+
+def test_club_does_not_duplicate_discussion() -> None:
+    """Обсуждение с тем же id не добавляется в клуб повторно."""
+    member = Member(1, "Олег Соколов", "oleg@example.com")
+    book = Book(1, "Мы", "Евгений Замятин", 1924)
+    first = Discussion(1, member, book, "Первый отзыв.")
+    copy = Discussion(1, member, book, "Копия отзыва.")
+    club = Club(1, "Клуб фантастики", "Читаем фантастику", [first])
+
+    club.add_discussion(copy)
+
+    assert club.discussions == [first]
+
+
+def test_club_creates_discussion() -> None:
+    """Клуб создаёт обсуждение и сразу добавляет его в свой список."""
+    member = Member(1, "Мария Смирнова", "maria@example.com")
+    book = Book(1, "Евгений Онегин", "Александр Пушкин", 1833)
     club = Club(1, "Клуб классики", "Читаем классику")
 
-    club.add_member(member)
-    club.add_book(book)
-    discussion = club.create_discussion(1, book, member, "Главный конфликт")
+    discussion = club.create_discussion(1, member, book, "Хорошая книга.")
 
     assert discussion in club.discussions
+    assert discussion.member is member
     assert discussion.book is book
-    assert discussion.author is member
-    assert discussion.club_id == club.id
-
-
-def test_discussion_adds_messages() -> None:
-    """В сообщениях сохраняются имена разных участников и их текст."""
-    member = Member(1, "Вера Соколова", "vera@example.com", "owner")
-    second_member = Member(2, "Максим Егоров", "maxim@example.com")
-    book = Book(1, "Преступление и наказание", "Федор Достоевский", 1866)
-    discussion = Discussion(1, 1, book, member, "Главный конфликт")
-
-    discussion.add_message(member, "Начинаем обсуждение.")
-    discussion.add_message(second_member, "Мне понравилась концовка.")
-
-    assert discussion.messages == [
-        "Вера Соколова: Начинаем обсуждение.",
-        "Максим Егоров: Мне понравилась концовка.",
-    ]
-
-
-def test_club_does_not_duplicate_member() -> None:
-    """Повторное добавление того же участника не создает копию."""
-    member = Member(1, "Лидия Андреева", "lidia@example.com")
-    club = Club(1, "Клуб классики", "Читаем классику")
-
-    club.add_member(member)
-    club.add_member(member)
-
-    assert club.members == [member]
-
-
-def test_club_recognizes_member_by_id() -> None:
-    """Клуб связывает участника по id и не добавляет его копию."""
-    member = Member(1, "Лидия Андреева", "lidia@example.com")
-    member_copy = Member(1, "Лидия Андреева", "lidia@example.com")
-    club = Club(1, "Клуб классики", "Читаем классику", [member])
-
-    club.add_member(member_copy)
-
-    assert club.has_member(member_copy)
-    assert club.members == [member]
-
-
-def test_discussion_is_linked_to_book() -> None:
-    """Обсуждение хранит объект выбранной книги и узнает ее по id."""
-    member = Member(1, "Ирина Лебедева", "irina@example.com")
-    book = Book(1, "Отцы и дети", "Иван Тургенев", 1862)
-    same_book = Book(1, "Отцы и дети", "Иван Тургенев", 1862)
-    discussion = Discussion(1, 1, book, member, "Конфликт поколений")
-
-    assert discussion.book is book
-    assert discussion.is_about(same_book)
-
-
-def test_club_contains_two_subclubs() -> None:
-    """Основной клуб может хранить два других клуба как объекты."""
-    club = Club(1, "Клуб классики", "Читаем классику")
-    first = Club(2, "Клуб романов", "Читаем романы")
-    second = Club(3, "Клуб фантастики", "Читаем фантастику")
-
-    club.add_subclub(first)
-    club.add_subclub(second)
-
-    assert club.subclubs == [first, second]
-    assert club.to_data()["subclub_ids"] == [2, 3]
-
-
-def test_discussion_requires_member_in_club() -> None:
-    """Посторонний участник не может создать обсуждение клуба."""
-    member = Member(1, "Петр Васильев", "petr@example.com")
-    book = Book(1, "Преступление и наказание", "Федор Достоевский", 1866)
-    club = Club(1, "Клуб классики", "Читаем классику", books=[book])
-
-    with pytest.raises(ValueError, match="club member"):
-        club.create_discussion(1, book, member, "Главный конфликт")
-
-
-def test_discussion_requires_book_in_club() -> None:
-    """Обсуждение нельзя создать для книги вне списка клуба."""
-    member = Member(1, "Юлия Тихонова", "yulia@example.com", "owner")
-    book = Book(1, "Преступление и наказание", "Федор Достоевский", 1866)
-    club = Club(1, "Клуб классики", "Читаем классику", [member])
-
-    with pytest.raises(ValueError):
-        club.create_discussion(1, book, member, "Главный конфликт")
 
 
 def test_add_club() -> None:
-    """Функция создает клуб и добавляет его в коллекцию."""
+    """Функция создаёт клуб и добавляет его в коллекцию."""
     clubs: list[Club] = []
 
     club = add_club(clubs, "Современная проза", "Обсуждаем новые книги")

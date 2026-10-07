@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Клубы — BookClub{% endblock %}
+
+{% block content %}
+<div class="container content-shell">
+<div class="page-heading">
+  <p class="eyebrow">Сообщество</p>
+  <h1>Книжные клубы</h1>
+  <p>Тематические подборки обсуждений и отзывов участников.</p>
+</div>
+<div class="entity-list">
+  {% for club in clubs %}
+    <a class="entity-row" href="{% url 'clubs:club_detail' club.id %}">
+      <span class="entity-index">{{ club.id|stringformat:"02d" }}</span>
+      <span><strong>{{ club.name }}</strong><small>{{ club.description }}</small></span>
+      <span class="entity-meta">{{ club.discussions|length }} отзывов</span>
+    </a>
+  {% empty %}
+    <div class="list-group-item">Клубы пока не созданы.</div>
+  {% endfor %}
+</div>
+</div>
+{% endblock %}

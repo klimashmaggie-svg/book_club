@@ -3,44 +3,32 @@ from .member import Member
 
 
 class Discussion:
-    """Discussion of a book inside a club."""
+    """A member's review of a selected book."""
 
     def __init__(
         self,
         discussion_id: int,
-        club_id: int,
+        member: Member,
         book: Book,
-        author: Member,
-        topic: str,
-        messages: list[str] | None = None,
+        review: str,
     ) -> None:
-        # Обсуждение связывает клуб, книгу, автора и список сообщений.
+        # Обсуждение объединяет участника, книгу и его отзыв.
         self.id = discussion_id
-        self.club_id = club_id
+        self.member = member
         self.book = book
-        self.author = author
-        self.topic = topic
-        self.messages = messages or []
-
-    def add_message(self, member: Member, text: str) -> None:
-        """Add a message to the discussion."""
-        # Сообщение хранится вместе с именем автора для удобного вывода.
-        self.messages.append(f"{member.name}: {text}")
+        self.review = review
 
     def is_about(self, book: Book) -> bool:
         """Return True if the discussion is linked to the selected book."""
         return self.book.id == book.id
 
     def to_data(self) -> dict:
-        """Convert the object to JSON-compatible data."""
-        # В JSON сохраняются id связанных объектов, а не сами объекты.
+        """Convert the discussion to JSON-compatible data."""
         return {
             "id": self.id,
-            "club_id": self.club_id,
+            "member_id": self.member.id,
             "book_id": self.book.id,
-            "author_id": self.author.id,
-            "topic": self.topic,
-            "messages": self.messages,
+            "review": self.review,
         }
 
     @classmethod
@@ -50,23 +38,20 @@ class Discussion:
         books: list[Book],
         members: list[Member],
     ) -> "Discussion":
-        """Create a Discussion object using linked Book and Member objects."""
-        # При загрузке нужно найти реальные объекты книги и автора по их id.
+        """Create a discussion and restore linked objects by id."""
         book = _find_required_book(books, data["book_id"])
-        author = _find_required_member(members, data["author_id"])
+        member = _find_required_member(members, data["member_id"])
         return cls(
             discussion_id=data["id"],
-            club_id=data["club_id"],
+            member=member,
             book=book,
-            author=author,
-            topic=data["topic"],
-            messages=data.get("messages", []),
+            review=data["review"],
         )
 
     def __str__(self) -> str:
         return (
-            f"Обсуждение #{self.id}: {self.topic} "
-            f"по книге «{self.book.title}»"
+            f"{self.member.name} о книге «{self.book.title}»: "
+            f"{self.review}"
         )
 
 
@@ -75,15 +60,21 @@ def find_discussions_by_book(
     book_id: int,
 ) -> list[Discussion]:
     """Find discussions for a selected book."""
-    return [
-        discussion
-        for discussion in discussions
-        if discussion.book.id == book_id
-    ]
+    return [item for item in discussions if item.book.id == book_id]
+
+
+def find_discussion_by_id(
+    discussions: list[Discussion],
+    discussion_id: int,
+) -> Discussion | None:
+    """Find one discussion by id."""
+    return next(
+        (item for item in discussions if item.id == discussion_id),
+        None,
+    )
 
 
 def _find_required_book(books: list[Book], book_id: int) -> Book:
-    # Вспомогательная проверка нужна, чтобы не создать обсуждение без книги.
     for book in books:
         if book.id == book_id:
             return book
@@ -91,7 +82,6 @@ def _find_required_book(books: list[Book], book_id: int) -> Book:
 
 
 def _find_required_member(members: list[Member], member_id: int) -> Member:
-    # Вспомогательная проверка нужна, чтобы не создать обсуждение без автора.
     for member in members:
         if member.id == member_id:
             return member

@@ -12,19 +12,10 @@ def main() -> None:
     print()
 
     print("Клубы:")
-    nested_ids = {subclub.id for club in clubs for subclub in club.subclubs}
     for club in clubs:
-        if club.id in nested_ids:
-            continue
         print(f"- {club}")
-        print("  Участники клуба:")
-        for member in club.members:
-            print(f"    - {member.name}")
-        for subclub in club.subclubs:
-            print(f"  - Внутри клуба: {subclub}")
-            print("    Участники клуба:")
-            for member in subclub.members:
-                print(f"      - {member.name}")
+        for discussion in club.discussions:
+            print(f"  - {discussion}")
 
     print()
     print("Участники:")
@@ -40,10 +31,6 @@ def main() -> None:
     print("Обсуждения:")
     for discussion in discussions:
         print(f"- {discussion}")
-        print(f"  Связанная книга: {discussion.book.title}")
-        # Сообщения хранятся внутри объекта обсуждения.
-        for message in discussion.messages:
-            print(f"  {message}")
 
     if clubs and books:
         # Ниже показаны примеры работы обычных функций с коллекциями объектов.
@@ -60,7 +47,7 @@ def main() -> None:
         print()
         print(f"Обсуждения книги «{books[0].title}»:")
         for discussion in find_discussions_by_book(discussions, books[0].id):
-            print(f"- {discussion.topic}")
+            print(f"- {discussion.review}")
 
     # Сохраняем объекты обратно в JSON-файлы.
     save_all(clubs, members, books, discussions)

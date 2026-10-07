@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}{{ member.name }} — BookClub{% endblock %}
+
+{% block content %}
+<div class="container content-shell">
+  <nav class="crumbs" aria-label="Хлебные крошки"><a href="{% url 'homepage:member_list' %}">Участники</a><span>/</span><span>{{ member.name }}</span></nav>
+  <section class="detail-panel">
+    <p class="eyebrow">Участник</p>
+    <h1>{{ member.name }}</h1>
+    <dl class="detail-data"><div><dt>Email</dt><dd>{{ member.email }}</dd></div><div><dt>Роль</dt><dd>{{ member.role }}</dd></div></dl>
+  </section>
+  <section class="section-block">
+    <p class="eyebrow">Отзывы</p><h2 class="section-title">Публикации участника</h2>
+    <div class="review-list mt-3">
+      {% for discussion in discussions %}
+        <a class="review-row" href="{% url 'clubs:discussion_detail' discussion.id %}"><span class="review-book">{{ discussion.book.title }}</span><span class="review-copy">{{ discussion.review }}</span></a>
+      {% empty %}<p>Участник пока не оставил отзывов.</p>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

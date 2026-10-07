@@ -3,7 +3,7 @@ from pathlib import Path
 
 from models import Book, Club, Discussion, Member
 
-DATA_DIR = Path("data")
+DATA_DIR = Path(__file__).resolve().parent / "data"
 
 # Пути к JSON-файлам с данными проекта.
 BOOKS_FILE = DATA_DIR / "books.json"
@@ -29,19 +29,12 @@ def load_all() -> tuple[
         for item in _read_json(DISCUSSIONS_FILE)
     ]
 
-    # Клуб связывает участников, книги и обсуждения в одну модель.
+    # Каждый клуб получает свой список готовых объектов Discussion.
     club_data = _read_json(CLUBS_FILE)
     clubs = [
-        Club.from_data(item, members, books, discussions)
+        Club.from_data(item, discussions)
         for item in club_data
     ]
-    clubs_by_id = {club.id: club for club in clubs}
-    # После создания всех клубов восстанавливаем вложенность по id.
-    for item, club in zip(club_data, clubs):
-        club.subclubs = [
-            clubs_by_id[club_id]
-            for club_id in item.get("subclub_ids", [])
-        ]
     return clubs, members, books, discussions
 
 

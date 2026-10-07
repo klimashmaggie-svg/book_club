@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Участники — BookClub{% endblock %}
+
+{% block content %}
+<div class="container content-shell">
+  <div class="page-heading">
+    <p class="eyebrow">Сообщество</p>
+    <h1>Участники</h1>
+    <p>Люди, которые читают книги и делятся своими отзывами.</p>
+  </div>
+  <div class="entity-list">
+    {% for member in members %}
+      <a class="entity-row" href="{% url 'homepage:member_detail' member.id %}">
+        <span class="entity-index">{{ member.id|stringformat:"02d" }}</span>
+        <span><strong>{{ member.name }}</strong><small>{{ member.email }}</small></span>
+        <span class="entity-meta">{{ member.role }}</span>
+      </a>
+    {% empty %}
+      <p>Участников пока нет.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

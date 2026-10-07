@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Книги — BookClub{% endblock %}
+
+{% block content %}
+<div class="container content-shell">
+<div class="page-heading">
+  <p class="eyebrow">Каталог</p>
+  <h1>Книги</h1>
+  <p>Произведения, выбранные участниками книжных клубов.</p>
+</div>
+<div class="row g-3">
+  {% for book in books %}
+    <div class="col-md-6 col-xl-4">
+      <a class="book-card h-100" href="{% url 'books:book_detail' book.id %}">
+        <div class="book-year">{{ book.year }}</div>
+        <h2 class="h5">{{ book.title }}</h2>
+        <p>{{ book.author }}</p>
+        <span class="text-link">Подробнее</span>
+      </a>
+    </div>
+  {% empty %}
+    <p>Книги пока не добавлены.</p>
+  {% endfor %}
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Отзывы — BookClub{% endblock %}
+
+{% block content %}
+<div class="container content-shell">
+  <div class="page-heading">
+    <p class="eyebrow">Обсуждения</p>
+    <h1>Отзывы</h1>
+    <p>Все мнения участников о прочитанных книгах.</p>
+  </div>
+  <div class="review-list">
+    {% for discussion in discussions %}
+      <a class="review-row" href="{% url 'clubs:discussion_detail' discussion.id %}">
+        <span class="review-book">{{ discussion.book.title }}</span>
+        <span class="review-copy">{{ discussion.review }}</span>
+        <span class="review-name">{{ discussion.member.name }}</span>
+      </a>
+    {% empty %}<p>Отзывов пока нет.</p>{% endfor %}
+  </div>
+</div>
+{% endblock %}
