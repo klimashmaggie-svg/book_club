@@ -1,0 +1,6 @@
+<a class="book-card h-100" href="{% url 'books:book_detail' book.id %}">
+  <div class="book-year">{{ book.year }}</div>
+  <h2 class="h5">{{ book.title }}</h2>
+  <p>{{ book.author|default:"Автор не указан" }}</p>
+  <span class="text-link">Подробнее</span>
+</a>

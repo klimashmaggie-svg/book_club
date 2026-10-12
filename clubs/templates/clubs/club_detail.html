@@ -15,11 +15,7 @@
 <p class="eyebrow">Мнения</p><h2 class="section-title">Обсуждения</h2>
 <div class="review-list mt-3">
   {% for discussion in club.discussions %}
-    <a class="review-row" href="{% url 'clubs:discussion_detail' discussion.id %}">
-      <span class="review-book">{{ discussion.book.title }}</span>
-      <span class="review-copy">{{ discussion.review }}</span>
-      <span class="review-name">{{ discussion.member.name }}</span>
-    </a>
+    {% include "clubs/includes/discussion_row.html" with discussion=discussion show_book=True show_member=True %}
   {% empty %}
     <div class="list-group-item">В клубе пока нет обсуждений.</div>
   {% endfor %}

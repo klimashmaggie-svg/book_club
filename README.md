@@ -19,7 +19,7 @@ book_club/
 │   └── wsgi.py
 ├── homepage/
 │   ├── templates/
-│   ├── static/
+│   ├── static/homepage/
 │   ├── urls.py
 │   └── views.py
 ├── books/
@@ -48,6 +48,9 @@ book_club/
 │   ├── test_member.py
 │   ├── test_storage.py
 │   └── test_web.py
+├── templates/
+│   ├── includes/navigation.html
+│   └── base.html
 ├── .flake8
 ├── .gitignore
 ├── manage.py
@@ -65,7 +68,7 @@ book_club/
 - `models/discussion.py` — объект, объединяющий участника, книгу и отзыв;
 - `models/club.py` — клуб, который хранит список обсуждений;
 - `bookclub_web/` — настройки и корневая маршрутизация Django;
-- `homepage/` — главная страница и общая HTML-разметка;
+- `homepage/` — главная страница, участники и статические файлы;
 - `books/` — список книг и страница отдельной книги;
 - `clubs/` — список клубов, страницы клуба и обсуждения;
 - `data/` — исходные данные проекта в формате JSON;
@@ -275,3 +278,41 @@ python3 -m venv .venv
 .venv/bin/python -m flake8 .
 .venv/bin/python manage.py check
 ```
+
+## Основные Django-файлы
+
+- `manage.py` — запуск команд и development-сервера Django;
+- `bookclub_web/settings.py` — настройки, приложения и локализация;
+- `bookclub_web/urls.py` — корневая маршрутизация;
+- `bookclub_web/asgi.py`, `bookclub_web/wsgi.py` — серверные точки входа;
+- `homepage/views.py` — главная страница и страницы участников;
+- `homepage/urls.py` — адреса `/`, `/members/` и `/members/<id>/`;
+- `templates/base.html` — общий HTML-каркас всех страниц;
+- `templates/includes/navigation.html` — общая навигация через `include`;
+- `homepage/templates/homepage/` — главная и страницы участников;
+- `books/templates/books/` — список и подробная страница книги;
+- `clubs/templates/clubs/` — страницы клубов и обсуждений;
+- `homepage/static/homepage/css/style.css` — собственное оформление;
+- `homepage/static/homepage/js/main.js` — текущий год и активный пункт меню;
+- `homepage/static/homepage/img/logo.png` — графический логотип;
+- `tests/test_web.py` — страницы, динамические маршруты и ответы 404.
+
+## Шаблоны Django (ПР6)
+
+Веб-интерфейс построен по схеме `View -> Context -> Template -> HTML`.
+View-функции загружают объекты из JSON, формируют словарь контекста и вызывают
+`render()`. HTML в Python не формируется, функция `page()` не используется.
+
+В проекте реализованы:
+
+- базовый шаблон и наследование через `extends` и `block`;
+- общая навигация и повторяющиеся карточки через `include`;
+- вывод значений из контекста через `{{ ... }}`;
+- циклы `for`, условия `if` и обработка пустых списков через `empty`;
+- фильтры `length`, `default` и `stringformat`;
+- именованные URL и пространства имён `homepage`, `books`, `clubs`;
+- ссылки через тег `url`;
+- CSS, JavaScript и PNG-изображение через систему `static`.
+
+Предметные данные продолжают храниться в JSON. Django ORM, формы и
+авторизация на этапе ПР6 не используются.

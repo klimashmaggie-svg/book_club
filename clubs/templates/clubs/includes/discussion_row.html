@@ -1,0 +1,9 @@
+<a class="review-row" href="{% url 'clubs:discussion_detail' discussion.id %}">
+  {% if show_book %}
+    <span class="review-book">{{ discussion.book.title }}</span>
+  {% endif %}
+  <span class="review-copy">{{ discussion.review|default:"Текст отзыва не указан." }}</span>
+  {% if show_member %}
+    <span class="review-name">{{ discussion.member.name }}</span>
+  {% endif %}
+</a>

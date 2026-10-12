@@ -8,13 +8,13 @@
   <section class="detail-panel">
     <p class="eyebrow">Участник</p>
     <h1>{{ member.name }}</h1>
-    <dl class="detail-data"><div><dt>Email</dt><dd>{{ member.email }}</dd></div><div><dt>Роль</dt><dd>{{ member.role }}</dd></div></dl>
+    <dl class="detail-data"><div><dt>Email</dt><dd>{{ member.email }}</dd></div><div><dt>Роль</dt><dd>{{ member.role|default:"Участник" }}</dd></div></dl>
   </section>
   <section class="section-block">
     <p class="eyebrow">Отзывы</p><h2 class="section-title">Публикации участника</h2>
     <div class="review-list mt-3">
       {% for discussion in discussions %}
-        <a class="review-row" href="{% url 'clubs:discussion_detail' discussion.id %}"><span class="review-book">{{ discussion.book.title }}</span><span class="review-copy">{{ discussion.review }}</span></a>
+        {% include "clubs/includes/discussion_row.html" with discussion=discussion show_book=True %}
       {% empty %}<p>Участник пока не оставил отзывов.</p>{% endfor %}
     </div>
   </section>

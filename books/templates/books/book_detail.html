@@ -19,10 +19,7 @@
   <p class="eyebrow">Отзывы</p><h2 class="section-title">Мнения участников</h2>
   <div class="review-list mt-3">
     {% for discussion in discussions %}
-      <a class="review-row" href="{% url 'clubs:discussion_detail' discussion.id %}">
-        <span class="review-name">{{ discussion.member.name }}</span>
-        <span class="review-copy">{{ discussion.review }}</span>
-      </a>
+      {% include "clubs/includes/discussion_row.html" with discussion=discussion show_member=True %}
     {% empty %}
       <div class="list-group-item">Для этой книги отзывов пока нет.</div>
     {% endfor %}

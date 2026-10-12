@@ -20,6 +20,15 @@ def test_main_pages_are_available() -> None:
     assert client.get("/clubs/discussions/").status_code == 200
 
 
+def test_base_template_connects_static_files() -> None:
+    """The shared template connects the PR6 CSS, image and JavaScript."""
+    content = Client().get("/").content.decode()
+
+    assert "/static/homepage/css/style.css" in content
+    assert "/static/homepage/js/main.js" in content
+    assert "/static/homepage/img/logo.png" in content
+
+
 def test_dynamic_pages_show_linked_objects() -> None:
     client = Client()
 
