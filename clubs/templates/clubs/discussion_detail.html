@@ -3,6 +3,7 @@
 {% block title %}Отзыв о книге {{ discussion.book.title }}{% endblock %}
 
 {% block content %}
+{# discussion из views.py связывает книгу, участника и отзыв; точка открывает атрибут. #}
 <div class="container content-shell narrow-shell">
 <nav aria-label="Хлебные крошки" class="crumbs">
   <a href="{% url 'clubs:discussion_list' %}">Отзывы</a><span>/</span><span>{{ discussion.book.title }}</span>
@@ -11,6 +12,7 @@
   <p class="eyebrow">Отзыв участника</p>
   <h1 class="h2 mb-4">{{ discussion.book.title }}</h1>
   <blockquote class="review-text">«{{ discussion.review }}»</blockquote>
+  {# url формирует ссылки на участника и книгу по их идентификаторам. #}
   <a class="review-author mt-4" href="{% url 'homepage:member_detail' discussion.member.id %}">
     <strong>{{ discussion.member.name }}</strong>
     <span>{{ discussion.member.email }}</span>
