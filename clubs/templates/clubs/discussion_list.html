@@ -7,8 +7,22 @@
   <div class="page-heading">
     <p class="eyebrow">Обсуждения</p>
     <h1>Отзывы</h1>
-    <p>{{ discussions|length }} отзывов участников о прочитанных книгах.</p>
+    <p>Найдено отзывов: {{ discussions|length }}</p>
   </div>
+  <form method="get" class="filter-bar">
+    <div class="filter-field">
+      <label for="review-club">Клуб</label>
+      <select class="form-select" name="club" id="review-club">
+        <option value="">Все клубы</option>
+        {% for club in clubs %}
+          <option value="{{ club.id }}" {% if selected == club.id|stringformat:"s" %}selected{% endif %}>{{ club.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="btn btn-accent" type="submit">Показать</button>
+    <a class="text-link" href="{% url 'clubs:discussion_list' %}">Сбросить</a>
+  </form>
+  {% if error %}<p class="validation-error" role="alert">{{ error }}</p>{% endif %}
   <div class="review-list">
     {% for discussion in discussions %}
       {% include "clubs/includes/discussion_row.html" with discussion=discussion show_book=True show_member=True %}

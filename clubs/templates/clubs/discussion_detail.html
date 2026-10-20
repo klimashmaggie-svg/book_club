@@ -1,23 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}Отзыв о книге {{ discussion.book.title }}{% endblock %}
+{% block title %}Отзыв о книге {{ discussion.book_title }}{% endblock %}
 
 {% block content %}
-{# discussion из views.py связывает книгу, участника и отзыв; точка открывает атрибут. #}
+{# discussion — строка JOIN; значения доступны по именам столбцов. #}
 <div class="container content-shell narrow-shell">
 <nav aria-label="Хлебные крошки" class="crumbs">
-  <a href="{% url 'clubs:discussion_list' %}">Отзывы</a><span>/</span><span>{{ discussion.book.title }}</span>
+  <a href="{% url 'clubs:discussion_list' %}">Отзывы</a><span>/</span><span>{{ discussion.book_title }}</span>
 </nav>
 <article class="detail-panel">
   <p class="eyebrow">Отзыв участника</p>
-  <h1 class="h2 mb-4">{{ discussion.book.title }}</h1>
+  <h1 class="h2 mb-4">{{ discussion.book_title }}</h1>
   <blockquote class="review-text">«{{ discussion.review }}»</blockquote>
   {# url формирует ссылки на участника и книгу по их идентификаторам. #}
-  <a class="review-author mt-4" href="{% url 'homepage:member_detail' discussion.member.id %}">
-    <strong>{{ discussion.member.name }}</strong>
-    <span>{{ discussion.member.email }}</span>
+  <a class="review-author mt-4" href="{% url 'homepage:member_detail' discussion.member_id %}">
+    <strong>{{ discussion.member_name }}</strong>
+    <span>{{ discussion.member_email }}</span>
   </a>
-  <a class="btn btn-accent mt-4" href="{% url 'books:book_detail' discussion.book.id %}">Открыть книгу</a>
+  <a class="btn btn-accent mt-4" href="{% url 'books:book_detail' discussion.book_id %}">Открыть книгу</a>
 </article>
 </div>
 {% endblock %}

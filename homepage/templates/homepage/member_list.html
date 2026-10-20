@@ -7,8 +7,22 @@
   <div class="page-heading">
     <p class="eyebrow">Сообщество</p>
     <h1>Участники</h1>
-    <p>{{ members|length }} участников читают книги и делятся отзывами.</p>
+    <p>Найдено участников: {{ members|length }}</p>
   </div>
+  <form method="get" class="filter-bar">
+    <div class="filter-field">
+      <label for="member-role">Роль</label>
+      <select class="form-select" id="member-role" name="role">
+        <option value="">Все роли</option>
+        {% for value, label in roles.items %}
+          <option value="{{ value }}" {% if value == role %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="btn btn-accent" type="submit">Показать</button>
+    <a class="text-link" href="{% url 'homepage:member_list' %}">Сбросить</a>
+  </form>
+  {% if error %}<p class="validation-error" role="alert">{{ error }}</p>{% endif %}
   <div class="entity-list">
     {% for member in members %}
       <a class="entity-row" href="{% url 'homepage:member_detail' member.id %}">

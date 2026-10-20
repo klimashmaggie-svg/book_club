@@ -390,6 +390,106 @@ a {
   font-weight: 600;
 }
 
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.filter-field {
+  flex: 1 1 230px;
+  min-width: 0;
+}
+
+.filter-field-small {
+  flex: 0 1 200px;
+}
+
+.filter-field label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.filter-field input,
+.filter-field select {
+  min-height: 46px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.6rem;
+  background-color: var(--white);
+  color: var(--ink);
+}
+
+.filter-bar > .text-link {
+  padding: 0.7rem 0;
+}
+
+.validation-error {
+  margin-bottom: 1.5rem;
+  color: var(--accent-dark);
+}
+
+.statistics-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.statistics-totals dt {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.statistics-totals dd {
+  margin: 0.35rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.statistics-section {
+  margin-top: 3rem;
+}
+
+.statistics-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.statistics-table th,
+.statistics-table td {
+  padding: 0.85rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  overflow-wrap: anywhere;
+}
+
+.number-cell {
+  width: 130px;
+  text-align: right;
+}
+
+.statistics-table th {
+  white-space: nowrap;
+}
+
+.statistics-table a {
+  text-decoration: none;
+}
+
+.crumbs,
+.entity-row strong,
+.entity-row small,
+.review-row span {
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 991px) {
   .desktop-nav {
     display: none;

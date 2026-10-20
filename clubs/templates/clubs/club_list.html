@@ -14,7 +14,7 @@
     <a class="entity-row" href="{% url 'clubs:club_detail' club.id %}">
       <span class="entity-index">{{ club.id|stringformat:"02d" }}</span>
       <span><strong>{{ club.name }}</strong><small>{{ club.description }}</small></span>
-      <span class="entity-meta">{{ club.discussions|length }} отзывов</span>
+      <span class="entity-meta">Отзывов: {{ club.discussion_count }}</span>
     </a>
   {% empty %}
     <div class="list-group-item">Клубы пока не созданы.</div>

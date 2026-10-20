@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика — BookClub{% endblock %}
+
+{% block content %}
+<div class="container content-shell">
+  <div class="page-heading"><h1>Статистика</h1></div>
+  <dl class="statistics-totals">
+    <div><dt>Книг</dt><dd>{{ books_count }}</dd></div>
+    <div><dt>Участников</dt><dd>{{ members_count }}</dd></div>
+    <div><dt>Клубов</dt><dd>{{ clubs_count }}</dd></div>
+    <div><dt>Отзывов</dt><dd>{{ discussions_count }}</dd></div>
+    <div><dt>Годы издания</dt><dd>{{ earliest_year|default_if_none:"—" }} – {{ latest_year|default_if_none:"—" }}</dd></div>
+  </dl>
+  <section class="statistics-section" aria-labelledby="book-statistics-title">
+    <h2 id="book-statistics-title" class="section-title">Отзывы о книгах</h2>
+    <form method="get" class="filter-bar mt-4">
+      <div class="filter-field filter-field-small">
+        <label for="min-reviews">Минимум отзывов</label>
+        <input class="form-control" type="number" name="min_reviews" id="min-reviews" value="{{ threshold }}" min="0" max="1000000" required>
+      </div>
+      <button class="btn btn-accent" type="submit">Показать</button>
+      <a class="text-link" href="{% url 'clubs:statistics' %}">Сбросить</a>
+    </form>
+    {% if error %}<p class="validation-error" role="alert">{{ error }}</p>{% endif %}
+    {# GROUP BY считает отзывы, HAVING применяет введённый порог. #}
+    <div class="table-responsive">
+      <table class="table statistics-table">
+        <thead><tr><th scope="col">Книга</th><th scope="col" class="number-cell">Отзывов</th></tr></thead>
+        <tbody>
+          {% for item in book_statistics %}
+            <tr><td><a href="{% url 'books:book_detail' item.id %}">{{ item.title }}</a></td><td class="number-cell">{{ item.discussion_count }}</td></tr>
+          {% empty %}<tr><td colspan="2">Нет книг с таким количеством отзывов.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="statistics-section" aria-labelledby="club-statistics-title">
+    <h2 id="club-statistics-title" class="section-title mb-4">Обсуждения в клубах</h2>
+    <div class="table-responsive">
+      <table class="table statistics-table">
+        <thead><tr><th scope="col">Клуб</th><th scope="col" class="number-cell">Обсуждений</th></tr></thead>
+        <tbody>
+          {% for item in club_statistics %}
+            <tr><td><a href="{% url 'clubs:club_detail' item.id %}">{{ item.name }}</a></td><td class="number-cell">{{ item.discussion_count }}</td></tr>
+          {% empty %}<tr><td colspan="2">Клубы пока не созданы.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="statistics-section" aria-labelledby="member-statistics-title">
+    <h2 id="member-statistics-title" class="section-title mb-4">Отзывы участников</h2>
+    <div class="table-responsive">
+      <table class="table statistics-table">
+        <thead><tr><th scope="col">Участник</th><th scope="col" class="number-cell">Отзывов</th></tr></thead>
+        <tbody>
+          {% for item in member_statistics %}
+            <tr><td><a href="{% url 'homepage:member_detail' item.id %}">{{ item.name }}</a></td><td class="number-cell">{{ item.discussion_count }}</td></tr>
+          {% empty %}<tr><td colspan="2">Участники пока не добавлены.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -14,7 +14,7 @@
 </div>
 <p class="eyebrow">Мнения</p><h2 class="section-title">Обсуждения</h2>
 <div class="review-list mt-3">
-  {% for discussion in club.discussions %}
+  {% for discussion in discussions %}
     {% include "clubs/includes/discussion_row.html" with discussion=discussion show_book=True show_member=True %}
   {% empty %}
     <div class="list-group-item">В клубе пока нет обсуждений.</div>
